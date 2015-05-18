@@ -4,7 +4,7 @@
 #include "InputManager.h"
 #include <SFML/Graphics.hpp>
 
-#ifdef _WIN32
+#if _WIN32
 #include <Windows.h>
 #elif _WIN64
 #include <Windows.h>

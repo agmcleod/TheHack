@@ -1,6 +1,14 @@
 #include "Renderer.h"
 #include <iostream>
 
+#ifdef __APPLE__
+#include "ResourcePath.hpp"
+#elif _WIN32
+inline std::string resourcePath() { return ""; }
+#elif _WIN64
+inline std::string resourcePath() { return ""; }
+#endif
+
 Renderer::Renderer(float width, float height) {
 	glewExperimental = true;
 	glewInit();
