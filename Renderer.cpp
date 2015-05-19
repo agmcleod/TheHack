@@ -17,10 +17,25 @@ Renderer::Renderer(float width, float height) {
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	setupShader();
+	setupBuffers();
+
 	glUseProgram(shaderProgram);
 	projection = glm::ortho(0.0f, width, height, 0.0f);
 
 	glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+}
+
+GLuint Renderer::bindTexture(sf::Image &image) {
+	GLuint texture;
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.getSize().x, image.getSize().y, 0, GL_RGBA, GL_UNSIGNED_BYTE, image.getPixelsPtr());
+	glBindTexture(GL_TEXTURE_2D, 0);
+	return texture;
 }
 
 void Renderer::beginFrame() {
@@ -77,6 +92,19 @@ void Renderer::compileProgram(const GLchar *vertex, const GLchar *fragment, GLui
 		glGetProgramInfoLog(shaderProgram, 512, NULL, buffer);
 		std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << buffer << std::endl;
 	}
+}
+
+void Renderer::renderTexture(GLuint &tex, sf::FloatRect &bounds) {
+	glm::mat4 model;
+	model = glm::translate(model, glm::vec3(bounds.left, bounds.top, 0.0f));
+	model = glm::scale(model, glm::vec3(bounds.width, bounds.height, 0.0f));
+	GLint modelMat = glGetUniformLocation(shaderProgram, "mMatrix");
+	glUniformMatrix4fv(modelMat, 1, GL_FALSE, glm::value_ptr(model));
+	
+	glBindTexture(GL_TEXTURE_2D, tex);
+	glBindVertexArray(vao);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+	glBindVertexArray(0);
 }
 
 void Renderer::setupBuffers() {

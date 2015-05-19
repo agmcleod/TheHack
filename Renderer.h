@@ -16,14 +16,15 @@ class Renderer {
 public:
 	Renderer(float width, float height);
 	void beginFrame();
+	GLuint bindTexture(sf::Image &image);
 	void cleanup();
 	void compileProgram(const GLchar *vertex, const GLchar *fragment, GLuint &vertexShader, GLuint &fragmentShader, GLuint &shaderProgram);
+	void renderTexture(GLuint &tex, sf::FloatRect &bounds);
 	void setupBuffers();
 	void setupShader();
 private:
 	GLuint ebo;
 	GLuint fragmentShader;
-	glm::mat4 modelMatrix;
 	glm::mat4 projection;
 	GLuint shaderProgram;
 	GLuint vao;

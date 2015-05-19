@@ -4,9 +4,13 @@
 #include "InputManager.h"
 #include <SFML/Graphics.hpp>
 
-#if _WIN32
+#ifdef __APPLE__
+#include "ResourcePath.hpp"
+#elif _WIN32
+inline std::string resourcePath() { return ""; }
 #include <Windows.h>
 #elif _WIN64
+inline std::string resourcePath() { return ""; }
 #include <Windows.h>
 #endif
 
@@ -22,7 +26,16 @@ int main() {
 	sf::Clock clock = sf::Clock();
 	Renderer renderer(800, 600);
 
+	sf::Image roomOneTexture;
+	std::string imagePath = resourcePath() + "atlas.png";
+	if (!roomOneTexture.loadFromFile(imagePath)) {
+		return EXIT_FAILURE;
+	}
+
+	GLuint texture = renderer.bindTexture(roomOneTexture);
+
 	InputManager input;
+	sf::FloatRect bounds(0.0f, 0.0f, 800.0f, 600.0f);
 
 	while (window.isOpen()) {
 		sf::Event event;
@@ -47,6 +60,7 @@ int main() {
 		}
 
 		renderer.beginFrame();
+		renderer.renderTexture(texture, bounds);
 
 		const float time = clock.getElapsedTime().asSeconds();
 
