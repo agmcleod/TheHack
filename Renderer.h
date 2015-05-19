@@ -12,6 +12,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "Texture.h"
+
 class Renderer {
 public:
 	Renderer(float width, float height);
@@ -19,7 +21,7 @@ public:
 	GLuint bindTexture(sf::Image &image);
 	void cleanup();
 	void compileProgram(const GLchar *vertex, const GLchar *fragment, GLuint &vertexShader, GLuint &fragmentShader, GLuint &shaderProgram);
-	void renderTexture(GLuint &tex, sf::FloatRect &bounds);
+	void renderTexture(sf::FloatRect &bounds, Texture &texture);
 	void setupBuffers();
 	void setupShader();
 private:

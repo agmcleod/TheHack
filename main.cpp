@@ -1,6 +1,7 @@
 #include <stdio.h>
 
 #include "Renderer.h"
+#include "Texture.h"
 #include "InputManager.h"
 #include <SFML/Graphics.hpp>
 
@@ -32,7 +33,13 @@ int main() {
 		return EXIT_FAILURE;
 	}
 
-	GLuint texture = renderer.bindTexture(roomOneTexture);
+	Texture roomOne;
+	roomOne.textureId = renderer.bindTexture(roomOneTexture);
+	roomOne.width = 800.0f;
+	roomOne.height = 600.0f;
+	roomOne.pos = sf::Vector2f(2, 2);
+	roomOne.originWidth = roomOneTexture.getSize().x;
+	roomOne.originHeight = roomOneTexture.getSize().y;
 
 	InputManager input;
 	sf::FloatRect bounds(0.0f, 0.0f, 800.0f, 600.0f);
@@ -60,7 +67,7 @@ int main() {
 		}
 
 		renderer.beginFrame();
-		renderer.renderTexture(texture, bounds);
+		renderer.renderTexture(bounds, roomOne);
 
 		const float time = clock.getElapsedTime().asSeconds();
 

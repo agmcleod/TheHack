@@ -94,15 +94,28 @@ void Renderer::compileProgram(const GLchar *vertex, const GLchar *fragment, GLui
 	}
 }
 
-void Renderer::renderTexture(GLuint &tex, sf::FloatRect &bounds) {
+void Renderer::renderTexture(sf::FloatRect &bounds, Texture &texture) {
 	glm::mat4 model;
 	model = glm::translate(model, glm::vec3(bounds.left, bounds.top, 0.0f));
 	model = glm::scale(model, glm::vec3(bounds.width, bounds.height, 0.0f));
 	GLint modelMat = glGetUniformLocation(shaderProgram, "mMatrix");
 	glUniformMatrix4fv(modelMat, 1, GL_FALSE, glm::value_ptr(model));
+
+	float x = texture.pos.x / texture.originWidth;
+	float y = texture.pos.y / texture.originHeight;
+	float rx = (texture.width + texture.pos.x) / texture.originWidth;
+	float ry = (texture.height + texture.pos.y) / texture.originHeight;
+	GLfloat vertices[] = {
+		//  Position(2) Color(3)     Texcoords(2)
+		0.0f, 0.0f, 1.0f, 1.0f, 1.0f, x, y, // Top-left
+		1.0f, 0.0f, 1.0f, 1.0f, 1.0f, rx, y, // Top-right
+		1.0f, 1.0f, 1.0f, 1.0f, 1.0f, rx, ry, // Bottom-right
+		0.0f, 1.0f, 1.0f, 1.0f, 1.0f, x, ry  // Bottom-left
+	};
 	
-	glBindTexture(GL_TEXTURE_2D, tex);
+	glBindTexture(GL_TEXTURE_2D, texture.textureId);
 	glBindVertexArray(vao);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 }
