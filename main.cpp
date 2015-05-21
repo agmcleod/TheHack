@@ -5,13 +5,10 @@
 #include "InputManager.h"
 #include <SFML/Graphics.hpp>
 
-#ifdef __APPLE__
-#include "ResourcePath.hpp"
-#elif _WIN32
-inline std::string resourcePath() { return ""; }
+#include "ResolvePath.h"
+#if _WIN32
 #include <Windows.h>
 #elif _WIN64
-inline std::string resourcePath() { return ""; }
 #include <Windows.h>
 #endif
 
@@ -33,7 +30,8 @@ int main() {
 		return EXIT_FAILURE;
 	}
 
-	Texture roomOne(renderer.bindTexture(roomOneTexture), roomOneTexture.getSize().x, roomOneTexture.getSize().y, 800.0f, 600.0f, sf::Vector2f(2, 2));
+	Texture atlas(renderer.bindTexture(roomOneTexture), roomOneTexture.getSize().x, roomOneTexture.getSize().y);
+    atlas.readRegionsFromFile("atlas.json");
 
 	InputManager input;
 	sf::FloatRect bounds(0.0f, 0.0f, 800.0f, 600.0f);
@@ -61,14 +59,14 @@ int main() {
 		}
 
 		renderer.beginFrame();
-		renderer.renderTexture(bounds, roomOne);
-
-		const float time = clock.getElapsedTime().asSeconds();
+		renderer.renderTexture(bounds, atlas, "RoomOne.png");
 
 		clock.restart();
 
 		window.display();
 	}
+    
+    atlas.cleanup();
 
 	return 0;
 }

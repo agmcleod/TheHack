@@ -1,13 +1,7 @@
 #include "Renderer.h"
 #include <iostream>
 
-#ifdef __APPLE__
-#include "ResourcePath.hpp"
-#elif _WIN32
-inline std::string resourcePath() { return ""; }
-#elif _WIN64
-inline std::string resourcePath() { return ""; }
-#endif
+#include "ResolvePath.h"
 
 Renderer::Renderer(float width, float height) {
 	glewExperimental = true;
@@ -94,30 +88,38 @@ void Renderer::compileProgram(const GLchar *vertex, const GLchar *fragment, GLui
 	}
 }
 
-void Renderer::renderTexture(sf::FloatRect &bounds, Texture &texture) {
-	glm::mat4 model;
-	model = glm::translate(model, glm::vec3(bounds.left, bounds.top, 0.0f));
-	model = glm::scale(model, glm::vec3(bounds.width, bounds.height, 0.0f));
-	GLint modelMat = glGetUniformLocation(shaderProgram, "mMatrix");
-	glUniformMatrix4fv(modelMat, 1, GL_FALSE, glm::value_ptr(model));
-
-	float x = texture.getPos().x / texture.getOriginWidth();
-	float y = texture.getPos().y / texture.getOriginHeight();
-	float rx = (texture.getWidth() + texture.getPos().x) / texture.getOriginWidth();
-	float ry = (texture.getHeight() + texture.getPos().y) / texture.getOriginHeight();
-	GLfloat vertices[] = {
-		//  Position(2) Color(3)     Texcoords(2)
-		0.0f, 0.0f, 1.0f, 1.0f, 1.0f, x, y, // Top-left
-		1.0f, 0.0f, 1.0f, 1.0f, 1.0f, rx, y, // Top-right
-		1.0f, 1.0f, 1.0f, 1.0f, 1.0f, rx, ry, // Bottom-right
-		0.0f, 1.0f, 1.0f, 1.0f, 1.0f, x, ry  // Bottom-left
-	};
+void Renderer::renderTexture(sf::FloatRect &bounds, Texture &texture, const std::string &regionName) {
+    
+    Region *region = texture.getRegion(regionName);
+    if (region != nullptr) {
+        glm::mat4 model;
+        model = glm::translate(model, glm::vec3(bounds.left, bounds.top, 0.0f));
+        model = glm::scale(model, glm::vec3(bounds.width, bounds.height, 0.0f));
+        GLint modelMat = glGetUniformLocation(shaderProgram, "mMatrix");
+        glUniformMatrix4fv(modelMat, 1, GL_FALSE, glm::value_ptr(model));
+        
+        float x = region->pos.x / texture.getWidth();
+        float y = region->pos.y / texture.getHeight();
+        float rx = (region->width + region->pos.x) / texture.getWidth();
+        float ry = (region->height + region->pos.y) / texture.getHeight();
+        GLfloat vertices[] = {
+            //  Position(2) Color(3)     Texcoords(2)
+            0.0f, 0.0f, 1.0f, 1.0f, 1.0f, x, y, // Top-left
+            1.0f, 0.0f, 1.0f, 1.0f, 1.0f, rx, y, // Top-right
+            1.0f, 1.0f, 1.0f, 1.0f, 1.0f, rx, ry, // Bottom-right
+            0.0f, 1.0f, 1.0f, 1.0f, 1.0f, x, ry  // Bottom-left
+        };
+        
+        glBindTexture(GL_TEXTURE_2D, texture.getTextureId());
+        glBindVertexArray(vao);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        glBindVertexArray(0);
+    }
+    else {
+        // std::cout << "Could not find region by: " << regionName << std::endl;
+    }
 	
-	glBindTexture(GL_TEXTURE_2D, texture.getTextureId());
-	glBindVertexArray(vao);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-	glBindVertexArray(0);
 }
 
 void Renderer::setupBuffers() {

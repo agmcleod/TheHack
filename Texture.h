@@ -3,22 +3,28 @@
 
 #ifndef __TheHack_Texture__
 #define __TheHack_Texture__
+
+struct Region {
+    std::string name;
+    sf::Vector2f pos;
+    float width;
+    float height;
+};
+
 class Texture {
 public:
-	Texture(GLuint textureId, float originWidth, float originHeight, float width, float height, sf::Vector2f pos) : textureId(textureId), originWidth(originWidth), originHeight(originHeight), width(width), height(height), pos(pos) {}
+	Texture(GLuint textureId, float width, float height) : textureId(textureId), width(width), height(height) {}
+    void cleanup();
 	GLuint getTextureId();
-	float getOriginWidth();
-	float getOriginHeight();
+    Region * getRegion(const std::string &name);
 	float getWidth();
 	float getHeight();
-	sf::Vector2f &getPos();
+    void readRegionsFromFile(const std::string &fileName);
 private:
 	GLuint textureId;
-	float originWidth;
-	float originHeight;
 	float width;
 	float height;
-	sf::Vector2f pos;
+    std::vector<Region *> regions;
 };
 
 #endif

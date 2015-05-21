@@ -6,6 +6,10 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
+#ifdef __APPLE__
+#include <OpenGL/OpenGL.h>
+#endif
+
 #include <SFML/OpenGL.hpp>
 #include <SFML/Graphics.hpp>
 #include <glm/mat4x4.hpp>
@@ -21,7 +25,7 @@ public:
 	GLuint bindTexture(sf::Image &image);
 	void cleanup();
 	void compileProgram(const GLchar *vertex, const GLchar *fragment, GLuint &vertexShader, GLuint &fragmentShader, GLuint &shaderProgram);
-	void renderTexture(sf::FloatRect &bounds, Texture &texture);
+    void renderTexture(sf::FloatRect &bounds, Texture &texture, const std::string &regionName);
 	void setupBuffers();
 	void setupShader();
 private:
