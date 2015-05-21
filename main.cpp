@@ -33,13 +33,7 @@ int main() {
 		return EXIT_FAILURE;
 	}
 
-	Texture roomOne;
-	roomOne.textureId = renderer.bindTexture(roomOneTexture);
-	roomOne.width = 800.0f;
-	roomOne.height = 600.0f;
-	roomOne.pos = sf::Vector2f(2, 2);
-	roomOne.originWidth = roomOneTexture.getSize().x;
-	roomOne.originHeight = roomOneTexture.getSize().y;
+	Texture roomOne(renderer.bindTexture(roomOneTexture), roomOneTexture.getSize().x, roomOneTexture.getSize().y, 800.0f, 600.0f, sf::Vector2f(2, 2));
 
 	InputManager input;
 	sf::FloatRect bounds(0.0f, 0.0f, 800.0f, 600.0f);

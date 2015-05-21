@@ -101,10 +101,10 @@ void Renderer::renderTexture(sf::FloatRect &bounds, Texture &texture) {
 	GLint modelMat = glGetUniformLocation(shaderProgram, "mMatrix");
 	glUniformMatrix4fv(modelMat, 1, GL_FALSE, glm::value_ptr(model));
 
-	float x = texture.pos.x / texture.originWidth;
-	float y = texture.pos.y / texture.originHeight;
-	float rx = (texture.width + texture.pos.x) / texture.originWidth;
-	float ry = (texture.height + texture.pos.y) / texture.originHeight;
+	float x = texture.getPos().x / texture.getOriginWidth();
+	float y = texture.getPos().y / texture.getOriginHeight();
+	float rx = (texture.getWidth() + texture.getPos().x) / texture.getOriginWidth();
+	float ry = (texture.getHeight() + texture.getPos().y) / texture.getOriginHeight();
 	GLfloat vertices[] = {
 		//  Position(2) Color(3)     Texcoords(2)
 		0.0f, 0.0f, 1.0f, 1.0f, 1.0f, x, y, // Top-left
@@ -113,7 +113,7 @@ void Renderer::renderTexture(sf::FloatRect &bounds, Texture &texture) {
 		0.0f, 1.0f, 1.0f, 1.0f, 1.0f, x, ry  // Bottom-left
 	};
 	
-	glBindTexture(GL_TEXTURE_2D, texture.textureId);
+	glBindTexture(GL_TEXTURE_2D, texture.getTextureId());
 	glBindVertexArray(vao);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
