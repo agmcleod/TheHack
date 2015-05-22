@@ -5,6 +5,8 @@
 #include "InputManager.h"
 #include <SFML/Graphics.hpp>
 
+#include <Box2D/Box2D.h>
+
 #include "ResolvePath.h"
 #if _WIN32
 #include <Windows.h>
@@ -42,7 +44,11 @@ int main() {
     input.bindAction(sf::Keyboard::Key::S, "down");
 	sf::FloatRect bounds(0.0f, 0.0f, 800.0f, 600.0f);
     
-    Player player(atlas);
+    b2Vec2 gravity(0, 0);
+    b2World world(gravity);
+    float32 timeStep = 1.0f / 60.0f;
+    
+    Player player(world, atlas);
 
 	while (window.isOpen()) {
 		sf::Event event;
@@ -69,6 +75,8 @@ int main() {
         float time = clock.getElapsedTime().asSeconds();
         
         player.update(input, time);
+        
+        world.Step(timeStep, 6, 2);
 
 		renderer.beginFrame();
 		renderer.renderTexture(bounds, atlas, "RoomOne.png");
