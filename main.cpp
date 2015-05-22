@@ -12,6 +12,8 @@
 #include <Windows.h>
 #endif
 
+#include "Player.h"
+
 int main() {
 	sf::ContextSettings settings;
 	settings.minorVersion = 2;
@@ -34,7 +36,13 @@ int main() {
     atlas.readRegionsFromFile("atlas.json");
 
 	InputManager input;
+    input.bindAction(sf::Keyboard::Key::W, "up");
+    input.bindAction(sf::Keyboard::Key::A, "left");
+    input.bindAction(sf::Keyboard::Key::D, "right");
+    input.bindAction(sf::Keyboard::Key::S, "down");
 	sf::FloatRect bounds(0.0f, 0.0f, 800.0f, 600.0f);
+    
+    Player player(atlas);
 
 	while (window.isOpen()) {
 		sf::Event event;
@@ -57,9 +65,15 @@ int main() {
 				input.releaseKey(event.key.code);
 			}
 		}
+        
+        float time = clock.getElapsedTime().asSeconds();
+        
+        player.update(input, time);
 
 		renderer.beginFrame();
 		renderer.renderTexture(bounds, atlas, "RoomOne.png");
+        
+        player.render(renderer);
 
 		clock.restart();
 

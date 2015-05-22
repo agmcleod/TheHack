@@ -26,6 +26,7 @@ public:
 	void cleanup();
 	void compileProgram(const GLchar *vertex, const GLchar *fragment, GLuint &vertexShader, GLuint &fragmentShader, GLuint &shaderProgram);
     void renderTexture(sf::FloatRect &bounds, Texture &texture, const std::string &regionName);
+    void renderTexture(sf::FloatRect &bounds, Texture &texture, Region *region);
 	void setupBuffers();
 	void setupShader();
 private:

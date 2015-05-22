@@ -2,20 +2,27 @@
 
 "RoomOne.png":
 {
-	"frame": {"x":2,"y":2,"w":800,"h":600},
+	"frame": {"x":2,"y":2,"w":800,"h":598},
 	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":800,"h":600},
-	"sourceSize": {"w":800,"h":600},
-	"pivot": {"x":0.5,"y":0.5}
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":0,"w":800,"h":598},
+	"sourceSize": {"w":800,"h":600}
+},
+"player.png":
+{
+	"frame": {"x":804,"y":2,"w":32,"h":30},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":2,"w":32,"h":30},
+	"sourceSize": {"w":32,"h":32}
 }},
 "meta": {
-	"app": "http://www.codeandweb.com/texturepacker",
+	"app": "http://www.codeandweb.com/texturepacker ",
 	"version": "1.0",
 	"image": "atlas.png",
 	"format": "RGBA8888",
 	"size": {"w":1024,"h":1024},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:1f8a8ec56c1b2841b42e30762f024e77:7bb1c63053e3f9e07d30d0bc13d15561:cbce6b53f0f49e0bf15173c25c41f876$"
+	"smartupdate": "$TexturePacker:SmartUpdate:0c5bb8b674aa7602950f735d13c4a62f:f6d8a760d6929fb06cea28e0cfa0f62d:cbce6b53f0f49e0bf15173c25c41f876$"
 }
 }

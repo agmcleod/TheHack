@@ -9,9 +9,9 @@
 class InputManager {
 public:
 	InputManager() {}
-	void bindAction(sf::Keyboard::Key &key, std::string actionName);
-	void captureKey(sf::Keyboard::Key &key);
-	void releaseKey(sf::Keyboard::Key &key);
+	void bindAction(const sf::Keyboard::Key &key, std::string actionName);
+	void captureKey(const sf::Keyboard::Key &key);
+	void releaseKey(const sf::Keyboard::Key &key);
 
 	bool isActionPressed(std::string action);
 private:

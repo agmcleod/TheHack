@@ -47,6 +47,7 @@ void Texture::readRegionsFromFile(const std::string &fileName) {
         region->pos = sf::Vector2f(frameDetails["x"].asInt(), frameDetails["y"].asInt());
         region->width = frameDetails["w"].asInt();
         region->height = frameDetails["h"].asInt();
+        region->texture = this;
         regions.push_back(region);
     }
 }

@@ -4,11 +4,14 @@
 #ifndef __TheHack_Texture__
 #define __TheHack_Texture__
 
+class Texture;
+
 struct Region {
     std::string name;
     sf::Vector2f pos;
     float width;
     float height;
+    Texture *texture;
 };
 
 class Texture {
