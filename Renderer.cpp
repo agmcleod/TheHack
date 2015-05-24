@@ -88,6 +88,19 @@ void Renderer::compileProgram(const GLchar *vertex, const GLchar *fragment, GLui
 	}
 }
 
+void Renderer::renderBox2d(GLfloat vertices[], GLfloat elements[]) {
+    glm::mat4 model;
+    GLint modelMat = glGetUniformLocation(shaderProgram, "mMatrix");
+    glUniformMatrix4fv(modelMat, 1, GL_FALSE, glm::value_ptr(model));
+    
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glBindVertexArray(vao);
+    glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(*elements), elements);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(*vertices), vertices);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    glBindVertexArray(0);
+}
+
 void Renderer::renderTexture(sf::FloatRect &bounds, Texture &texture, const std::string &regionName) {
     Region *region = texture.getRegion(regionName);
     if (region != nullptr) {

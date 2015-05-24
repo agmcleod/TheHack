@@ -1,6 +1,7 @@
 #include <stdio.h>
 
 #include "Renderer.h"
+#include "Box2DRenderer.h"
 #include "Texture.h"
 #include "InputManager.h"
 #include <SFML/Graphics.hpp>
@@ -46,6 +47,12 @@ int main() {
     
     b2Vec2 gravity(0, 0);
     b2World world(gravity);
+    
+    Box2DRenderer box2dRenderer;
+    box2dRenderer.setRenderer(&renderer);
+    box2dRenderer.SetFlags(b2Draw::e_shapeBit);
+    world.SetDebugDraw(&box2dRenderer);
+    
     float32 timeStep = 1.0f / 60.0f;
     
     Player player(world, atlas);
@@ -75,16 +82,14 @@ int main() {
         float time = clock.getElapsedTime().asSeconds();
         
         player.update(input, time);
-        
         world.Step(timeStep, 6, 2);
+        
+        clock.restart();
 
 		renderer.beginFrame();
 		renderer.renderTexture(bounds, atlas, "RoomOne.png");
-        
         player.render(renderer);
-
-		clock.restart();
-
+        world.DrawDebugData();
 		window.display();
 	}
     
