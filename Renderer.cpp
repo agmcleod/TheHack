@@ -88,7 +88,7 @@ void Renderer::compileProgram(const GLchar *vertex, const GLchar *fragment, GLui
 	}
 }
 
-void Renderer::renderBox2d(GLfloat vertices[], GLfloat elements[]) {
+void Renderer::renderBox2d(GLfloat (&vertices)[28], GLfloat (&elements)[6]) {
     glm::mat4 model;
     GLint modelMat = glGetUniformLocation(shaderProgram, "mMatrix");
     glUniformMatrix4fv(modelMat, 1, GL_FALSE, glm::value_ptr(model));

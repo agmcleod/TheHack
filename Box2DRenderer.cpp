@@ -13,7 +13,7 @@ void Box2DRenderer::setRenderer(Renderer * r) {
 }
 
 void Box2DRenderer::DrawPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color) {
-    GLfloat glVertices[vertexCount * 7];
+    /* GLfloat glVertices[56];
     int offset = 0;
     for (int32 i = 0; i < vertexCount; ++i)
     {
@@ -25,9 +25,22 @@ void Box2DRenderer::DrawPolygon(const b2Vec2* vertices, int32 vertexCount, const
         glVertices[offset + 5] = 0.0f;
         glVertices[offset + 6] = 0.0f;
         offset += 7;
-    }
+    } */
     
-    renderer->renderBox2d(glVertices);
+    GLfloat glVertices[] = {
+        //  Position(2) Color(3)     Texcoords(2)
+        vertices[0].x, vertices[0].y, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, // Top-left
+        vertices[1].x, vertices[1].y, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, // Top-right
+        vertices[2].x, vertices[2].y, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, // Bottom-right
+        vertices[3].x, vertices[3].y, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f  // Bottom-left
+    };
+    
+    GLfloat elements[] = {
+        0, 1, 2,
+        2, 3, 0
+    };
+    
+    renderer->renderBox2d(glVertices, elements);
 }
 
 void Box2DRenderer::DrawSolidPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color) {

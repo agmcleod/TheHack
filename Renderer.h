@@ -28,7 +28,7 @@ public:
     void renderTexture(sf::FloatRect &bounds, Texture &texture, const std::string &regionName);
     void renderTexture(sf::FloatRect &bounds, Texture &texture, Region *region);
     
-    void renderBox2d(GLfloat vertices[], GLfloat elements[]);
+    void renderBox2d(GLfloat (&vertices)[28], GLfloat (&elements)[6]);
 	void setupBuffers();
 	void setupShader();
 private:
