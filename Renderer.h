@@ -25,11 +25,11 @@ public:
 	GLuint bindTexture(sf::Image &image);
 	void cleanup();
 	void compileProgram(const GLchar *vertex, const GLchar *fragment, GLuint &vertexShader, GLuint &fragmentShader, GLuint &shaderProgram);
+    glm::mat4 &getProjectionMatrix();
     void renderTexture(sf::FloatRect &bounds, Texture &texture, const std::string &regionName);
     void renderTexture(sf::FloatRect &bounds, Texture &texture, Region *region);
     
-    void renderBox2d(GLfloat (&vertices)[28], GLfloat (&elements)[6]);
-	void setupBuffers();
+    void setupBuffers();
 	void setupShader();
 private:
 	GLuint ebo;

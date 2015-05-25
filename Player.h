@@ -20,7 +20,7 @@ public:
     Player(b2World &world, Texture &texture) {
         textureRegion = texture.getRegion("player.png");
         bounds = sf::FloatRect(200, 200, 32, 32);
-        speed = 250.0f;
+        speed = 100.0f;
         
         b2BodyDef def;
         def.type = b2_dynamicBody;
@@ -44,6 +44,8 @@ private:
     b2Body *body;
     float speed;
     Region *textureRegion;
+    b2Vec2 velocity;
+    
 };
 
 #endif /* defined(__TheHack__Player__) */

@@ -89,10 +89,12 @@ int main() {
 		renderer.beginFrame();
 		renderer.renderTexture(bounds, atlas, "RoomOne.png");
         player.render(renderer);
+        
         world.DrawDebugData();
 		window.display();
 	}
     
+    box2dRenderer.cleanup();
     atlas.cleanup();
 
 	return 0;

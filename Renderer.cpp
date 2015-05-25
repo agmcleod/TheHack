@@ -33,6 +33,8 @@ GLuint Renderer::bindTexture(sf::Image &image) {
 }
 
 void Renderer::beginFrame() {
+    glUseProgram(shaderProgram);
+    glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 }
@@ -68,7 +70,7 @@ void Renderer::compileProgram(const GLchar *vertex, const GLchar *fragment, GLui
 
 	if (status != GL_TRUE) {
 		char buffer[512];
-		glGetShaderInfoLog(vertexShader, 512, NULL, buffer);
+		glGetShaderInfoLog(fragmentShader, 512, NULL, buffer);
 		std::cout << buffer << std::endl;
 		assert(false);
 	}
@@ -88,17 +90,8 @@ void Renderer::compileProgram(const GLchar *vertex, const GLchar *fragment, GLui
 	}
 }
 
-void Renderer::renderBox2d(GLfloat (&vertices)[28], GLfloat (&elements)[6]) {
-    glm::mat4 model;
-    GLint modelMat = glGetUniformLocation(shaderProgram, "mMatrix");
-    glUniformMatrix4fv(modelMat, 1, GL_FALSE, glm::value_ptr(model));
-    
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glBindVertexArray(vao);
-    glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(*elements), elements);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(*vertices), vertices);
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-    glBindVertexArray(0);
+glm::mat4 &Renderer::getProjectionMatrix() {
+    return projection;
 }
 
 void Renderer::renderTexture(sf::FloatRect &bounds, Texture &texture, const std::string &regionName) {

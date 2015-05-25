@@ -14,15 +14,26 @@ void Player::render(Renderer &renderer) {
 
 void Player::update(InputManager &im, float time) {
     if (im.isActionPressed("up")) {
-        bounds.top -= speed * time;
+        velocity.Set(0, -speed * time);
     }
     else if (im.isActionPressed("down")) {
-        bounds.top += speed * time;
+        velocity.Set(0, speed * time);
+    }
+    else {
+        velocity.Set(0, 0);
     }
     if (im.isActionPressed("left")) {
-        bounds.left -= speed * time;
+        velocity.Set(-speed * time, velocity.y);
     }
     else if (im.isActionPressed("right")) {
-        bounds.left += speed * time;
+        velocity.Set(speed * time, velocity.y);
     }
+    else {
+        velocity.Set(0, velocity.y);
+    }
+    
+    body->SetLinearVelocity(velocity);
+    
+    bounds.left = body->GetPosition().x * BOX_TO_WORLD + bounds.width / 2;
+    bounds.top = body->GetPosition().y * BOX_TO_WORLD + bounds.height / 2;
 }
