@@ -29,6 +29,7 @@ public:
     void DrawAABB(b2AABB* aabb, const b2Color& color);
     
     void setRenderer(Renderer * r);
+    void startRender();
 private:
     static const uint32 CIRCLE_SEGMENTS = 16;
     static const uint32 MAX_VERTICES = 64;
@@ -36,9 +37,10 @@ private:
     GLuint fragShader;
     float32 pointSize;
     GLuint pointSizeLocation;
-    GLuint positionLocation;
     Renderer *renderer;
     GLuint shaderProgram;
+    GLuint vao;
+    GLuint vbo;
     GLuint vertShader;
     GLfloat vertices[MAX_VERTICES];
     enum {

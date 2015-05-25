@@ -12,6 +12,8 @@ void Box2DRenderer::cleanup() {
     glDeleteProgram(shaderProgram);
     glDeleteShader(fragShader);
     glDeleteShader(vertShader);
+    glDeleteBuffers(1, &vbo);
+    glDeleteVertexArrays(1, &vao);
 }
 
 void Box2DRenderer::createPolygonVertices(const b2Vec2* vertices, int32 vertexCount) {
@@ -63,9 +65,8 @@ void Box2DRenderer::DrawPoint(const b2Vec2& p, float32 size, const b2Color& colo
 }
 
 void Box2DRenderer::drawPrimitives(uint32 primitiveTypes, uint32 aCount, const b2Color& aColor) {
-    glUseProgram(shaderProgram);
-    glEnableVertexAttribArray(positionLocation);
-    glVertexAttribPointer(positionLocation, 2, GL_FLOAT, GL_FALSE, 0, vertices);
+    glBindVertexArray(vao);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
     glUniform4f(colorLocation, aColor.r, aColor.g, aColor.b, 0.5f);
     
     if (primitiveTypes & eTriangles) {
@@ -81,8 +82,7 @@ void Box2DRenderer::drawPrimitives(uint32 primitiveTypes, uint32 aCount, const b
         glDrawArrays(GL_POINTS, 0, aCount);
     }
     
-    glDisableVertexAttribArray(positionLocation);
-    glUseProgram(0);
+    glBindVertexArray(0);
 }
 
 void Box2DRenderer::DrawAABB(b2AABB* aabb, const b2Color& c)
@@ -119,9 +119,26 @@ void Box2DRenderer::setRenderer(Renderer * r) {
     this->renderer->compileProgram(vertSource, fragSource, vertShader, fragShader, shaderProgram);
     
     glUseProgram(shaderProgram);
+    glGenBuffers(1, &vbo);
+    glGenVertexArrays(1, &vao);
+    
+    glBindVertexArray(vao);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_DYNAMIC_DRAW);
+    
     glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "u_projection"), 1, GL_FALSE, glm::value_ptr(this->renderer->getProjectionMatrix()));
-    positionLocation = glGetAttribLocation(shaderProgram, "a_position");
+    
+    GLuint positionLocation = glGetAttribLocation(shaderProgram, "a_position");
+    glEnableVertexAttribArray(positionLocation);
+    glVertexAttribPointer(positionLocation, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), 0);
+    glBindVertexArray(0);
+    
     colorLocation = glGetUniformLocation(shaderProgram, "u_color");
     pointSizeLocation = glGetUniformLocation(shaderProgram, "u_pointSize");
     glUseProgram(0);
+}
+
+void Box2DRenderer::startRender() {
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glUseProgram(shaderProgram);
 }
