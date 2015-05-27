@@ -6,7 +6,7 @@
 #include "InputManager.h"
 #include <SFML/Graphics.hpp>
 
-#include <Box2D/Box2D.h>
+#include "LevelCollision.h"
 
 #include "ResolvePath.h"
 #if _WIN32
@@ -56,6 +56,9 @@ int main() {
     float32 timeStep = 1.0f / 60.0f;
     
     Player player(world, atlas);
+    
+    LevelCollision collision;
+    collision.buildWorldCollision(world);
 
 	while (window.isOpen()) {
 		sf::Event event;

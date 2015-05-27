@@ -27,6 +27,7 @@ public:
         def.position.Set((bounds.left + bounds.width / 2) * WORLD_TO_BOX, (bounds.top + bounds.height / 2) * WORLD_TO_BOX);
         
         body = world.CreateBody(&def);
+        body->SetFixedRotation(true);
         
         b2PolygonShape shape;
         shape.SetAsBox(bounds.width / 2 * WORLD_TO_BOX, bounds.height / 2 * WORLD_TO_BOX);
