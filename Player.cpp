@@ -34,6 +34,6 @@ void Player::update(InputManager &im, float time) {
     
     body->SetLinearVelocity(velocity);
     
-    bounds.left = body->GetPosition().x * BOX_TO_WORLD + bounds.width / 2;
-    bounds.top = body->GetPosition().y * BOX_TO_WORLD + bounds.height / 2;
+    bounds.left = body->GetPosition().x * BOX_TO_WORLD - bounds.width / 2;
+    bounds.top = body->GetPosition().y * BOX_TO_WORLD - bounds.height / 2;
 }
